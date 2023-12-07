@@ -22,12 +22,11 @@
 # 🥇 실전 훈련
 |총 문제 수|티어|유형|
 |---:|---|---|
-|2|![Gold1][g1] ~ ![Gold1][g1]|`BFS` `Simulation` `Sort` `Priority Queue`|
+|1|![Gold1][g1] ~ ![Gold1][g1]|`BFS` `Simulation` |
 
 |기록분류|이름|티어|유형|상태|최근 제출 코드|
 |---|---|---|---|---|---|
 |기출문제|[포탑 부수기](https://www.codetree.ai/training-field/frequent-problems/problems/destroy-the-turret)|![Gold1][g1]|`Simulation` `BFS`|![Passed][passed]|[링크](https://github.com/esovo/codetree-TILs/blob/main/231207/%ED%8F%AC%ED%83%91%20%EB%B6%80%EC%88%98%EA%B8%B0/destroy-the-turret.java)|
-|기출문제|[토끼와 경주](https://www.codetree.ai/training-field/frequent-problems/problems/rabit-and-race)|![Gold1][g1]|`Simulation` `Sort` `Priority Queue`|![Failed][failed]|[링크](https://github.com/esovo/codetree-TILs/blob/main/231207/%ED%86%A0%EB%81%BC%EC%99%80%20%EA%B2%BD%EC%A3%BC/rabit-and-race.java)|
 
 
 
