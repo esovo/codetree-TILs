@@ -32,6 +32,7 @@ public class Main {
 
     static int n, m, k;
     static List<Turret> list;
+    static boolean[][] relate;
     static int[][] map, attack;
     static int[] dr = {0, 1, 0, -1, -1, 1, 1, -1};
     static int[] dc = {1, 0, -1, 0, 1, 1, -1, -1};
@@ -70,6 +71,7 @@ public class Main {
             map[weak.x][weak.y] = weak.power = weak.power+n+m;
             
             // 레이저 공격
+            relate = new boolean[n][m];
             if(!laserAttack(weak, strong)){
                 // 포탄 공격(레이저 공격을 할 수 없는 경우)
                 turretAttack(weak, strong);
@@ -77,7 +79,7 @@ public class Main {
 
             // 포탑 정비
             for(Turret turret : list){
-                if(map[turret.x][turret.y] == turret.power) map[turret.x][turret.y]++;
+                if(!relate[turret.x][turret.y]) map[turret.x][turret.y]++;
             }
         }
 
@@ -98,6 +100,7 @@ public class Main {
         Queue<Turret> queue = new LinkedList<>();
         queue.offer(weak);
         visited[weak.x][weak.y] = true;
+        relate[weak.x][weak.y] = true;
 
         while(!queue.isEmpty()){
             Turret t = queue.poll();
@@ -106,6 +109,7 @@ public class Main {
                 // 공격 대상 포탑 공격(공격력)
                 map[t.x][t.y] -= map[weak.x][weak.y];
                 if(map[t.x][t.y] < 0) map[t.x][t.y] = 0;
+                relate[t.x][t.y] = true;
 
                 // 지나온 경로에 있는 포탑 공격(공격력 절반)
                 int half = map[weak.x][weak.y]/2;
@@ -116,6 +120,7 @@ public class Main {
                     if(pre.x==weak.x && pre.y==weak.y) break;
                     map[pre.x][pre.y] -= half;
                     if(map[pre.x][pre.y] < 0) map[pre.x][pre.y] = 0;
+                    relate[pre.x][pre.y] = true;
                     x = pre.x;
                     y = pre.y;
                 }
