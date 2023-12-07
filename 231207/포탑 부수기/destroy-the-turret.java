@@ -56,22 +56,25 @@ public class Main {
             list = new ArrayList<>();
             for(int i=0; i<n; i++){
                 for(int j=0; j<m; j++){
-                    if(map[i][j] != 0) list.add(new Turret(i, j, map[i][j], attack[i][j]));
+                    if(map[i][j] > 0) list.add(new Turret(i, j, map[i][j], attack[i][j]));
                 }
             }
 
             // 공격자 포탑, 공격할 포탑 선정
             int size = list.size();
+            if(size==1) break;
             Collections.sort(list);
             Turret weak = list.get(0);
             Turret strong = list.get(size-1);
-            attack[weak.x][weak.y] = t+1;
+            weak.recent = attack[weak.x][weak.y] = t+1;
 
             // 공격자로 선정된 포탑 핸디캡 적용
             map[weak.x][weak.y] = weak.power = weak.power+n+m;
             
             // 레이저 공격
             relate = new boolean[n][m];
+            relate[weak.x][weak.y] = true;
+            relate[strong.x][strong.y] = true;
             if(!laserAttack(weak, strong)){
                 // 포탄 공격(레이저 공격을 할 수 없는 경우)
                 turretAttack(weak, strong);
@@ -79,7 +82,7 @@ public class Main {
 
             // 포탑 정비
             for(Turret turret : list){
-                if(!relate[turret.x][turret.y]) map[turret.x][turret.y]++;
+                if(map[turret.x][turret.y]!=0 && !relate[turret.x][turret.y]) map[turret.x][turret.y]++;
             }
         }
 
@@ -100,19 +103,17 @@ public class Main {
         Queue<Turret> queue = new LinkedList<>();
         queue.offer(weak);
         visited[weak.x][weak.y] = true;
-        relate[weak.x][weak.y] = true;
 
         while(!queue.isEmpty()){
             Turret t = queue.poll();
             
             if(t.x==strong.x && t.y==strong.y){
                 // 공격 대상 포탑 공격(공격력)
-                map[t.x][t.y] -= map[weak.x][weak.y];
+                map[t.x][t.y] -= weak.power;
                 if(map[t.x][t.y] < 0) map[t.x][t.y] = 0;
-                relate[t.x][t.y] = true;
 
                 // 지나온 경로에 있는 포탑 공격(공격력 절반)
-                int half = map[weak.x][weak.y]/2;
+                int half = weak.power/2;
                 int x = t.x;
                 int y = t.y;
                 while(true){
@@ -129,10 +130,10 @@ public class Main {
             }
 
             for(int i=0; i<4; i++){
-                int dx = t.x+dr[i];
-                int dy = t.y+dc[i];
+                int dx = (n+t.x+dr[i])%n;
+                int dy = (m+t.y+dc[i])%m;
 
-                if(dx<0 || dx>=n || dy<0 || dy>=m || visited[dx][dy]) continue;
+                if(map[dx][dy]==0 || visited[dx][dy]) continue;
                 queue.offer(new Turret(dx, dy));
                 visited[dx][dy] = true;
                 root[dx][dy] = t;
@@ -143,16 +144,18 @@ public class Main {
     }
 
     static private void turretAttack(Turret weak, Turret strong){
-        map[strong.x][strong.y] -= map[weak.x][weak.y];
+        map[strong.x][strong.y] -= weak.power;
         if(map[strong.x][strong.y] < 0) map[strong.x][strong.y] = 0;
 
-        int half = map[weak.x][weak.y]/2;
+        int half = weak.power/2;
         for(int i=0; i<8; i++){
-            int dx = (strong.x+dr[i])%n;
-            int dy = (strong.y+dc[i])%m;
+            int dx = (n+strong.x+dr[i])%n;
+            int dy = (m+strong.y+dc[i])%m;
 
+            if(dx==weak.x && dy==weak.y) continue;
             map[dx][dy] -= half;
             if(map[dx][dy] < 0) map[dx][dy] = 0;
+            relate[dx][dy] = true;
         }
     }
 
