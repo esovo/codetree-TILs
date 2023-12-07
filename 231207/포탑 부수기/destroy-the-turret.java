@@ -21,7 +21,7 @@ public class Main {
         public int compareTo(Turret t){
             if(this.power == t.power){
                 if(this.recent == t.recent){
-                    if((this.x+this.y) == (t.x+t.y)) return t.x-this.x;
+                    if((this.x+this.y) == (t.x+t.y)) return t.y-this.y;
                     return (t.x+t.y)-(this.x+this.y);
                 }
                 return t.recent-this.recent;
