@@ -136,7 +136,7 @@ public class Main {
                     }
                     break;
                 case 400: // 최고의 토끼 선정
-                    int maxScore = Integer.MIN_VALUE;
+                    long maxScore = 0;
                     for (Rabbit rab : pq) {
                         maxScore = Math.max(maxScore, rab.score);
                     }
