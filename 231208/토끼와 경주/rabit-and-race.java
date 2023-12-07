@@ -4,14 +4,13 @@ import java.io.*;
 public class Main {
     
     static class Rabbit implements Comparable<Rabbit>{
-        int x, y, pid, d, jump;
+        int x, y, pid, jump;
         long score;
 
-        Rabbit(int x, int y, int pid, int d, int jump, long score){
+        Rabbit(int x, int y, int pid, int jump, long score){
             this.x = x;
             this.y = y;
             this.pid = pid;
-            this.d = d;
             this.jump = jump;
             this.score = score;
         }
@@ -65,9 +64,11 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int q = Integer.parseInt(br.readLine());
         PriorityQueue<Rabbit> pq = new PriorityQueue<>();
+        HashMap<Integer, Integer> map = new HashMap<>();
         int[] dr = {-1, 1, 0, 0};
         int[] dc = {0, 0, -1, 1};
         int n = 0, m = 0, p = 0;
+        int sum = 0;
 
         for(int i=0; i<q; i++){
             StringTokenizer st = new StringTokenizer(br.readLine());
@@ -81,7 +82,8 @@ public class Main {
                     for(int j=0; j<p; j++){
                         int pid = Integer.parseInt(st.nextToken());
                         int d = Integer.parseInt(st.nextToken());
-                        pq.offer(new Rabbit(0, 0, pid, d, 0, 0));
+                        pq.offer(new Rabbit(0, 0, pid, 0, 0));
+                        map.put(pid, d);
                     }
                     break;
                 case 200: // 경주 진행 
@@ -96,26 +98,27 @@ public class Main {
                         // 해당 토끼 상하좌우 d만큼 이동 시 위치 구하기
                         int dx = rabbit.x;
                         int dy = rabbit.y;
+                        int d = map.get(rabbit.pid);
 
                         // 상
-                        dx = (rabbit.x-rabbit.d)%(2*(n-1));
+                        dx = (rabbit.x-d)%(2*(n-1));
                         if(dx < 0) dx = Math.abs(dx);
                         if(dx >= n) dx = 2*(n-1)-dx;
                         queue.offer(new Loc(dx, rabbit.y, rabbit.pid)); 
 
                         //하
-                        dx = (rabbit.x+rabbit.d)%(2*(n-1));
+                        dx = (rabbit.x+d)%(2*(n-1));
                         if(dx >= n) dx = 2*(n-1)-dx;
                         queue.offer(new Loc(dx, rabbit.y, rabbit.pid)); 
 
                         //좌
-                        dy = (rabbit.y-rabbit.d)%(2*(m-1));
+                        dy = (rabbit.y-d)%(2*(m-1));
                         if(dy < 0) dy = Math.abs(dy);
                         if(dy >= m) dy = 2*(m-1)-dy;
                         queue.offer(new Loc(rabbit.x, dy, rabbit.pid)); 
 
                         //우
-                        dy = (rabbit.y+rabbit.d)%(2*(m-1));
+                        dy = (rabbit.y+d)%(2*(m-1));
                         if (dy >= m) dy = 2*(m-1)-dy;
                         queue.offer(new Loc(rabbit.x, dy, rabbit.pid));
 
@@ -127,7 +130,8 @@ public class Main {
                         temp.offer(loc);
 
                         // 해당 토끼 제외한 나머지 토끼 점수 획득   
-                        for(Rabbit rab : pq) rab.score += loc.x+loc.y+2;
+                        rabbit.score -= loc.x+loc.y+2;
+                        sum += loc.x+loc.y+2;
                         pq.offer(rabbit);
                     }
                     // K번 반복 후 우선순위 가장 높은 토끼 점수 + S
@@ -140,17 +144,12 @@ public class Main {
                     int pid_t = Integer.parseInt(st.nextToken());
                     int l = Integer.parseInt(st.nextToken());
                     // 고유번호 pid인 토끼 이동거리 L배
-                    for (Rabbit rab : pq) {
-                        if (rab.pid == pid_t) {
-                            rab.d *= l;
-                            break;
-                        }
-                    }
+                    map.put(pid_t, l);
                     break;
                 case 400: // 최고의 토끼 선정
                     long maxScore = 0;
                     for (Rabbit rab : pq) {
-                        maxScore = Math.max(maxScore, rab.score);
+                        maxScore = Math.max(maxScore, rab.score+sum);
                     }
                     System.out.println(maxScore);
                     break;
