@@ -5,9 +5,9 @@ public class Main {
     
     static class Rabbit implements Comparable<Rabbit>{
         int x, y, pid, d, jump;
-        int score;
+        long score;
 
-        Rabbit(int x, int y, int pid, int d, int jump, int score){
+        Rabbit(int x, int y, int pid, int d, int jump, long score){
             this.x = x;
             this.y = y;
             this.pid = pid;
