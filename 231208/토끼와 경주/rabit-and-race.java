@@ -68,7 +68,7 @@ public class Main {
         int[] dr = {-1, 1, 0, 0};
         int[] dc = {0, 0, -1, 1};
         int n = 0, m = 0, p = 0;
-        int sum = 0;
+        long sum = 0;
 
         for(int i=0; i<q; i++){
             StringTokenizer st = new StringTokenizer(br.readLine());
@@ -144,7 +144,7 @@ public class Main {
                     int pid_t = Integer.parseInt(st.nextToken());
                     int l = Integer.parseInt(st.nextToken());
                     // 고유번호 pid인 토끼 이동거리 L배
-                    map.put(pid_t, l);
+                    map.put(pid_t, map.get(pid_t)*l);
                     break;
                 case 400: // 최고의 토끼 선정
                     long maxScore = 0;
